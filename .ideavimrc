@@ -1,0 +1,122 @@
+" .ideavimrc is a configuration file for IdeaVim plugin. It uses
+"   the same commands as the original .vimrc configuration.
+" You can find a list of commands here: https://jb.gg/h38q75
+" Find more examples here: https://jb.gg/share-ideavimrc
+
+let mapleader=" "
+"" -- Suggested options --
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=5
+
+" Do incremental searching.
+set incsearch
+
+" Sync Vim's internal clipboard with the system clipboard
+set clipboard+=unnamedplus
+
+" Don't use Ex mode, use Q for formatting.
+map Q gq
+
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+
+" Highlight copied text
+Plug 'machakann/vim-highlightedyank'
+" Commentary plugin
+Plug 'tpope/vim-commentary'
+
+set which-key
+set notimeout
+"" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
+"" Map \r to the Reformat Code action
+"map \r <Action>(ReformatCode)
+
+"" Map <leader>d to start debug
+"map <leader>d <Action>(Debug)
+
+"" Map \b to toggle the breakpoint on the current line
+"map \b <Action>(ToggleLineBreakpoint)
+
+" --- General ---
+" Open JetBrains Clipboard History (<leader>ch)
+nnoremap <leader>ch :action PasteMultiple<CR>
+
+
+" --- Find / Search ---
+
+" Find a file (<leader>ff)
+nnoremap <leader>ff :action GotoFile<CR>
+
+" Global text search (Find in Path) (<leader>sg)
+nnoremap <leader>sg :action FindInPath<CR>
+
+" Text search in the current file (<leader>sb)
+nnoremap <leader>sb :action Find<CR>
+
+" --- Symbol Navigation ---
+
+" Search for symbol in the current file (<leader>ss)
+nnoremap <leader>ss :action FileStructurePopup<CR>
+
+" Search for symbol across the entire project/path (<leader>sS)
+nnoremap <leader>sS :action GotoSymbol<CR>
+
+" --- Buffer / Tab Management ---
+
+" Close all other files/tabs (<leader>bo)
+nnoremap <leader>bo :action CloseAllEditorsButActive<CR>
+
+" Close the current file/tab (<leader>bd)
+nnoremap <leader>bd :action CloseContent<CR>
+
+" --- Imports / Code Actions ---
+
+" Organize Imports (<leader>cao)
+nnoremap <leader>cao :action OptimizeImports<CR>
+
+" Add missing import at cursor / Show Context Actions (<leader>cai)
+" This opens the 'Alt+Enter' menu to let you pick the correct import
+nnoremap <leader>cai :action ShowIntentionActions<CR>
+
+" --- Git / VCS ---
+
+" Open git history for the current file (<leader>gf)
+nnoremap <leader>gf :action Vcs.ShowTabbedFileHistory<CR>
+
+" Toggle git blame / annotate for the current file (<leader>gb)
+nnoremap <leader>gb :action Annotate<CR>
+
+" Show Git history for the currently selected block of code (Visual Mode)
+vnoremap <leader>gh :action Vcs.ShowHistoryForBlock<CR>
+
+" Open the project-wide Git Log tool window
+nnoremap <leader>gl :action Vcs.Show.Log<CR>
+
+" Map <leader>gg to toggle LazyGit
+nmap <leader>gg <Action>(Lazygit.Toggle)
+
+" --- Refactoring ---
+
+" Rename the symbol under the cursor safely across the whole project
+nnoremap <leader>rn :action RenameElement<CR>
+
+" --- Code Navigation ---
+
+" Go to Declaration (Jump into the source code of a function/component)
+" Standard Vim uses 'gd' for this, we can tell IdeaVim to use the IDE's engine
+nnoremap gd :action GotoDeclaration<CR>
+
+" Go to Implementation (Useful for abstract classes/interfaces)
+nnoremap gi :action GotoImplementation<CR>
+
+" Find Usages (Opens a panel showing everywhere a component/variable is used)
+nnoremap <leader>fu :action FindUsages<CR>
+
+" Show Usages (Same as above, but opens a fast popup window instead of a panel)
+nnoremap <leader>su :action ShowUsages<CR>
+
+" --- Angular / Framework Navigation ---
+
+" Jump between Component (TS), Template (HTML), and Styles (SCSS)
+" I like mapping this to 'gr' (Go to Related) or a leader key
+nnoremap <leader>gr :action GotoRelated<CR>
