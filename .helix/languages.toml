@@ -1,31 +1,10 @@
-# Language Server Declarations
-[language-server.angular-ls]
-command = "ngserver"
-args = [
-  "--stdio",
-  "--ngProbeLocations", "~/lsp/node_modules",
-  "--tsProbeLocations", "~/lsp/node_modules",
-]
-
-[language-server.tsgo-ls]
-command = "tsgo"
-args = ["--lsp", "--stdio"]
-
+# vtsls config
 [language-server.typescript-language-server]
-command = "typescript-language-server"
+command = "vtsls"
 args = ["--stdio"]
+config.hostInfo = "helix"
 
-[language-server.css-ls]
-command = "vscode-css-language-server"
-args = ["--stdio"]
-
-[language-server.json-ls]
-command = "vscode-json-language-server"
-args = ["--stdio"]
-
-
-# Language Server Config
-[language-server.tsgo-ls.config.typescript]
+[language-server.typescript-language-server.config.typescript]
 updateImportsOnFileMove.enabled = "always"
 suggest.completeFunctionCalls = true
 tsserver.enableTracing = true
@@ -39,16 +18,53 @@ format.enable = false
 format.semicolons = "remove"
 preferences.importModuleSpecifier = "non-relative"
 preferences.importModuleSpecifierEnding = "auto"
+
+# tsgo config
+[language-server.tsgo]
+command = "tsgo"
+args = ["--lsp", "--stdio"]
+
+[language-server.tsgo.config.typescript]
+updateImportsOnFileMove.enabled = "always"
+suggest.completeFunctionCalls = true
+tsserver.enableTracing = true
+inlayHints.parameterNames.enabled = "all"
+inlayHints.parameterTypes.enabled = true
+inlayHints.variableTypes.enabled = true
+inlayHints.propertyDeclarationTypes.enabled = true
+inlayHints.functionLikeReturnTypes = true
+inlayHints.enumMemberValues.enabled = true
+format.enable = false
 tsserver.experimental.enableProjectDiagnostics = true
 
-#Languages
+# go config
+[language-server.gopls]
+command = "gopls"
+
+[language-server.gopls.config]
+# diagnosticsTrigger = "Save"
+usePlaceholders = true
+staticcheck = true
+vulncheck = "Imports" # or "All"
+gofumpt = true
+
+[language-server.gopls.config.analyses]
+unusedfunc = true
+unusedparams = true
+unreachable = true
+unusedvariable = true
+
+[language-server.gopls.config.hints]
+compositeLiteralTypes = true
+
+# Frontend Language Config
 [[language]]
 name = "angular"
 scope = "source.angular"
 injection-regex = "html"
 file-types = ["component.html", "html"] # Angular 21+ updated the naming format
 block-comment-tokens = { start = "<!--", end = "-->" }
-language-servers = ["angular-ls"]
+language-servers = ["angular"]
 roots = ["project.json"]
 formatter = { command = 'npx', args = ["prettier", "--parser", "html"] }
 auto-format = true
@@ -58,12 +74,16 @@ auto-format = true
 '"' = '"'
 "'" = "'"
 
+[[grammar]]
+name = "angular"
+source = { git = "https://github.com/dlvandenberg/tree-sitter-angular", rev = "f0d0685701b70883fa2dfe94ee7dc27965cab841" }
+
 [[language]]
 name = "typescript"
 auto-format = true
 language-servers = [
-   "angular-ls",
-   { name = "tsgo-ls", except-features = ["format", "completion", "code-action", "goto-reference"] }, # Angular handles file references
+   "angular",
+   { name = "tsgo", except-features = ["format", "completion", "code-action", "goto-reference"] }, # Angular handles file references
    { name = "typescript-language-server", only-features = ["completion", "code-action"] },
 ]
 formatter = { command = 'npx', args = ["prettier", "--parser", "typescript"] }
@@ -72,18 +92,22 @@ roots = ["package.json"]
 [[language]]
 name = "scss"
 auto-format = true
-language-servers = ["css-ls"]
 formatter = { command = 'npx', args = ["prettier", "--parser", "scss"] }
 roots = ["package.json"]
 
 [[language]]
 name = "json"
 auto-format = true
-language-servers = ["json-ls"]
+# language-servers = ["json-ls"]
 formatter = { command = 'npx', args = ["prettier", "--parser", "json"] }
 roots = ["package.json"]
 
-# External Grammar
-[[grammar]]
-name = "angular"
-source = { git = "https://github.com/dlvandenberg/tree-sitter-angular", rev = "f0d0685701b70883fa2dfe94ee7dc27965cab841" }
+
+# Backend Language Config
+[[language]]
+name = "go"
+indent = { tab-width = 2, unit = " " }
+auto-format = true
+language-servers = ["gopls"]
+formatter = { command = "gofumpt" }
+
