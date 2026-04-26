@@ -57,6 +57,63 @@ unusedvariable = true
 [language-server.gopls.config.hints]
 compositeLiteralTypes = true
 
+[language-server.efm-eslint]
+# See: https://github.com/mattn/efm-langserver/blob/master/schema.md#languages_pattern1
+# And: https://github.com/mattn/efm-langserver?tab=readme-ov-file#example-for-configyaml
+command = "efm-langserver"
+
+[language-server.efm-eslint.config]
+# Sent to efm-langserver at startup to configure it. 🎉
+# See: https://github.com/mattn/efm-langserver?tab=readme-ov-file#initializeparams
+documentFormatting = true
+documentRangeFormatting = true
+hover = true
+documentSymbol = true
+codeAction = true
+completion = true
+
+[[language-server.efm-eslint.config.languages.angular]]
+lintCommand = "npx eslint --stdin --stdin-filename ${INPUT}"
+lintStdin = true
+lintIgnoreExitCode = true
+lintAfterOpen = true
+lintFormats = [
+   # Very helpful examples. Need to parse multi-line messages where file only appears once:
+   # See: https://vimhelp.org/quickfix.txt.html#errorformats
+   # And: https://reviewdog.github.io/errorformat-playground/
+   "%+P%f", # a file-like string on a single line.
+   "%*[ ]%l:%c%*[ ]%t%*[^ ]%*[ ]%m",
+   "%-O", # if not a match, pop filename from %P stack.
+
+   # Example eslint output:
+   #
+   # /full/path/to/your/source.file.ts
+   #    16:1  error    There should be no empty line within import group  import/order
+   #   472:1  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+   #   479:3  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+]
+
+[[language-server.efm-eslint.config.languages.typescript]]
+lintCommand = "npx eslint --stdin --stdin-filename ${INPUT}"
+lintStdin = true
+lintIgnoreExitCode = true
+lintAfterOpen = true
+lintFormats = [
+   # Very helpful examples. Need to parse multi-line messages where file only appears once:
+   # See: https://vimhelp.org/quickfix.txt.html#errorformats
+   # And: https://reviewdog.github.io/errorformat-playground/
+   "%+P%f", # a file-like string on a single line.
+   "%*[ ]%l:%c%*[ ]%t%*[^ ]%*[ ]%m",
+   "%-O", # if not a match, pop filename from %P stack.
+
+   # Example eslint output:
+   #
+   # /full/path/to/your/source.file.ts
+   #    16:1  error    There should be no empty line within import group  import/order
+   #   472:1  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+   #   479:3  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+]
+
 # Frontend Language Config
 [[language]]
 name = "angular"
@@ -64,7 +121,7 @@ scope = "source.angular"
 injection-regex = "html"
 file-types = ["component.html", "html"] # Angular 21+ updated the naming format
 block-comment-tokens = { start = "<!--", end = "-->" }
-language-servers = ["angular"]
+language-servers = [{name = "efm-eslint", only-features = [ "diagnostics", "format" ]}, "angular"]
 roots = ["project.json"]
 formatter = { command = 'npx', args = ["prettier", "--parser", "html"] }
 auto-format = true
@@ -85,6 +142,7 @@ language-servers = [
    "angular",
    { name = "tsgo", except-features = ["format", "completion", "code-action", "goto-reference"] }, # Angular handles file references
    { name = "typescript-language-server", only-features = ["completion", "code-action"] },
+   { name = "efm-eslint", only-features = [ "diagnostics", "format"]}
 ]
 formatter = { command = 'npx', args = ["prettier", "--parser", "typescript"] }
 roots = ["package.json"]
