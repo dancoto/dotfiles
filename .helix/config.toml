@@ -5,5 +5,20 @@ C-s = ":write" # Ctrl and 's' to write
 Cmd-s = ":write" # Cmd or Win or Meta and 's' to write
 
 [keys.normal.","]
-o = [':lsp-workspace-command typescript.sortImports "%{file_path_absolute}"', ":w"]
-r = [':lsp-workspace-command typescript.removeUnusedImports "%{file_path_absolute}"', ":w"]
+o = [':lsp-workspace-command typescript.sortImports "%{file_path_absolute}"', ":w"] # Sort Imports
+r = [':lsp-workspace-command typescript.removeUnusedImports "%{file_path_absolute}"', ":w"] # Remove Unused Imports
+# Lazygit (requires some workaround see https://github.com/helix-editor/helix/discussions/12045#discussioncomment-15149194)
+g = [":sh echo \"%{file_path_absolute}\" > ~/.cache/helix/file_path_absolute",
+    ":write-all",
+    ":new",
+    ":insert-output lazygit -p \"%sh{git -C ''%sh{dirname %sh{cat ~/.cache/helix/file_path_absolute}}'' rev-parse --show-toplevel}\"",
+    ":buffer-close!",
+    ":set mouse false",
+    ":set mouse true",
+    ":redraw",
+    ":reload-all"]
+# Replace vite with jest as needed
+[keys.normal.space.t]
+f = ':sh vitest --no-color "%{buffer_name}"' # Test File
+l = ':sh vitest --no-color "%{buffer_name}:%{cursor_line}"' # Test File at Line
+

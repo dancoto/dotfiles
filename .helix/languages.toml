@@ -37,26 +37,7 @@ inlayHints.enumMemberValues.enabled = true
 format.enable = false
 tsserver.experimental.enableProjectDiagnostics = true
 
-# go config
-[language-server.gopls]
-command = "gopls"
-
-[language-server.gopls.config]
-# diagnosticsTrigger = "Save"
-usePlaceholders = true
-staticcheck = true
-vulncheck = "Imports" # or "All"
-gofumpt = true
-
-[language-server.gopls.config.analyses]
-unusedfunc = true
-unusedparams = true
-unreachable = true
-unusedvariable = true
-
-[language-server.gopls.config.hints]
-compositeLiteralTypes = true
-
+# efm config (mostly for eslint compat)
 [language-server.efm-eslint]
 # See: https://github.com/mattn/efm-langserver/blob/master/schema.md#languages_pattern1
 # And: https://github.com/mattn/efm-langserver?tab=readme-ov-file#example-for-configyaml
@@ -73,7 +54,7 @@ codeAction = true
 completion = true
 
 [[language-server.efm-eslint.config.languages.angular]]
-lintCommand = "npx eslint --stdin --stdin-filename ${INPUT}"
+lintCommand = "eslint --stdin --stdin-filename ${INPUT}"
 lintStdin = true
 lintIgnoreExitCode = true
 lintAfterOpen = true
@@ -94,7 +75,7 @@ lintFormats = [
 ]
 
 [[language-server.efm-eslint.config.languages.typescript]]
-lintCommand = "npx eslint --stdin --stdin-filename ${INPUT}"
+lintCommand = "eslint --stdin --stdin-filename ${INPUT}"
 lintStdin = true
 lintIgnoreExitCode = true
 lintAfterOpen = true
@@ -114,6 +95,28 @@ lintFormats = [
    #   479:3  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
 ]
 
+# go config
+[language-server.gopls]
+command = "gopls"
+
+[language-server.gopls.config]
+# diagnosticsTrigger = "Save"
+usePlaceholders = true
+staticcheck = true
+vulncheck = "Imports" # or "All"
+gofumpt = true
+
+[language-server.gopls.config.analyses]
+unusedfunc = true
+unusedparams = true
+unreachable = true
+unusedvariable = true
+
+[language-server.gopls.config.hints]
+compositeLiteralTypes = true
+
+
+
 # Frontend Language Config
 [[language]]
 name = "angular"
@@ -123,7 +126,7 @@ file-types = ["component.html", "html"] # Angular 21+ updated the naming format
 block-comment-tokens = { start = "<!--", end = "-->" }
 language-servers = [{name = "efm-eslint", only-features = [ "diagnostics", "format" ]}, "angular"]
 roots = ["project.json"]
-formatter = { command = 'npx', args = ["prettier", "--parser", "html"] }
+formatter = { command = 'prettier', args = ["--parser", "html"] }
 auto-format = true
 [language.auto-pairs]
 '(' = ')'
@@ -144,22 +147,26 @@ language-servers = [
    { name = "typescript-language-server", only-features = ["completion", "code-action", "workspace-command"] },
    { name = "efm-eslint", only-features = [ "diagnostics", "format"]}
 ]
-formatter = { command = 'npx', args = ["prettier", "--parser", "typescript"] }
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+roots = ["package.json"]
+
+[[language]]
+name = "javascript"
+auto-format = true
+formatter = { command = 'prettier', args = ["--parser", "babel"] }
 roots = ["package.json"]
 
 [[language]]
 name = "scss"
 auto-format = true
-formatter = { command = 'npx', args = ["prettier", "--parser", "scss"] }
+formatter = { command = 'prettier', args = ["--parser", "scss"] }
 roots = ["package.json"]
 
 [[language]]
 name = "json"
 auto-format = true
-# language-servers = ["json-ls"]
-formatter = { command = 'npx', args = ["prettier", "--parser", "json"] }
+formatter = { command = 'prettier', args = ["--parser", "json"] }
 roots = ["package.json"]
-
 
 # Backend Language Config
 [[language]]
