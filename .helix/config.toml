@@ -1,1 +1,9 @@
 theme = "ayu_evolve"
+
+[keys.normal]
+C-s = ":write" # Ctrl and 's' to write
+Cmd-s = ":write" # Cmd or Win or Meta and 's' to write
+
+[keys.normal.","]
+o = [':lsp-workspace-command typescript.sortImports "%{file_path_absolute}"', ":w"]
+r = [':lsp-workspace-command typescript.removeUnusedImports "%{file_path_absolute}"', ":w"]

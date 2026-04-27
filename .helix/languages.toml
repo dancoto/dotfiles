@@ -141,7 +141,7 @@ auto-format = true
 language-servers = [
    "angular",
    { name = "tsgo", except-features = ["format", "completion", "code-action", "goto-reference"] }, # Angular handles file references
-   { name = "typescript-language-server", only-features = ["completion", "code-action"] },
+   { name = "typescript-language-server", only-features = ["completion", "code-action", "workspace-command"] },
    { name = "efm-eslint", only-features = [ "diagnostics", "format"]}
 ]
 formatter = { command = 'npx', args = ["prettier", "--parser", "typescript"] }
