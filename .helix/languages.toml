@@ -1,3 +1,27 @@
+### Frontend
+## Typescript
+# `npm install -g typescript @vtsls/language-server @typescript/native-preview`
+## Angular Dependencies
+# `npm install -g @angular/language-service @angular/language-server`
+## Angular Grammar
+#   Until https://github.com/helix-editor/helix/pull/15632 gets merged, use the
+#   included runtime/queries folder. Then run the below to build grammar
+#  `hx --grammar fetch`
+#  `hx --grammar build`
+## Linting
+# `brew install efm-langserver`
+# `npm install -g eslint_d`       (or `brew install eslint_d` too)
+
+### Backend
+## Install Go and add `$HOME/go/bin` to your path
+# https://go.dev/doc/install#install
+## Setup deps
+# # go install golang.org/x/tools/gopls@latest                             # LSP
+# go install github.com/go-delve/delve/cmd/dlv@latest                      # Debugger
+# go install go install mvdan.cc/gofumpt@latest                            # Formatter
+# go install github.com/nametake/golangci-lint-langserver@latest           # Linter
+# go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest # Linter cli
+
 # vtsls config
 [language-server.typescript-language-server]
 command = "vtsls"
@@ -28,6 +52,7 @@ args = ["--lsp", "--stdio"]
 updateImportsOnFileMove.enabled = "always"
 suggest.completeFunctionCalls = true
 tsserver.enableTracing = true
+tsserver.experimental.enableProjectDiagnostics = true
 inlayHints.parameterNames.enabled = "all"
 inlayHints.parameterTypes.enabled = true
 inlayHints.variableTypes.enabled = true
@@ -35,7 +60,6 @@ inlayHints.propertyDeclarationTypes.enabled = true
 inlayHints.functionLikeReturnTypes = true
 inlayHints.enumMemberValues.enabled = true
 format.enable = false
-tsserver.experimental.enableProjectDiagnostics = true
 
 # efm config (mostly for eslint compat)
 [language-server.efm-eslint]
@@ -54,45 +78,45 @@ codeAction = true
 completion = true
 
 [[language-server.efm-eslint.config.languages.angular]]
-lintCommand = "eslint --stdin --stdin-filename ${INPUT}"
+lintCommand = "eslint_d --stdin --stdin-filename ${INPUT}"
 lintStdin = true
 lintIgnoreExitCode = true
 lintAfterOpen = true
 lintFormats = [
-   # Very helpful examples. Need to parse multi-line messages where file only appears once:
-   # See: https://vimhelp.org/quickfix.txt.html#errorformats
-   # And: https://reviewdog.github.io/errorformat-playground/
-   "%+P%f", # a file-like string on a single line.
-   "%*[ ]%l:%c%*[ ]%t%*[^ ]%*[ ]%m",
-   "%-O", # if not a match, pop filename from %P stack.
+  # Very helpful examples. Need to parse multi-line messages where file only appears once:
+  # See: https://vimhelp.org/quickfix.txt.html#errorformats
+  # And: https://reviewdog.github.io/errorformat-playground/
+  "%+P%f",  # a file-like string on a single line.
+  "%*[ ]%l:%c%*[ ]%t%*[^ ]%*[ ]%m",
+  "%-O",  # if not a match, pop filename from %P stack.
 
-   # Example eslint output:
-   #
-   # /full/path/to/your/source.file.ts
-   #    16:1  error    There should be no empty line within import group  import/order
-   #   472:1  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
-   #   479:3  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+  # Example eslint output:
+  #
+  # /full/path/to/your/source.file.ts
+  #    16:1  error    There should be no empty line within import group  import/order
+  #   472:1  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+  #   479:3  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
 ]
 
 [[language-server.efm-eslint.config.languages.typescript]]
-lintCommand = "eslint --stdin --stdin-filename ${INPUT}"
+lintCommand = "eslint_d --stdin --stdin-filename ${INPUT}"
 lintStdin = true
 lintIgnoreExitCode = true
 lintAfterOpen = true
 lintFormats = [
-   # Very helpful examples. Need to parse multi-line messages where file only appears once:
-   # See: https://vimhelp.org/quickfix.txt.html#errorformats
-   # And: https://reviewdog.github.io/errorformat-playground/
-   "%+P%f", # a file-like string on a single line.
-   "%*[ ]%l:%c%*[ ]%t%*[^ ]%*[ ]%m",
-   "%-O", # if not a match, pop filename from %P stack.
+  # Very helpful examples. Need to parse multi-line messages where file only appears once:
+  # See: https://vimhelp.org/quickfix.txt.html#errorformats
+  # And: https://reviewdog.github.io/errorformat-playground/
+  "%+P%f",  # a file-like string on a single line.
+  "%*[ ]%l:%c%*[ ]%t%*[^ ]%*[ ]%m",
+  "%-O",  # if not a match, pop filename from %P stack.
 
-   # Example eslint output:
-   #
-   # /full/path/to/your/source.file.ts
-   #    16:1  error    There should be no empty line within import group  import/order
-   #   472:1  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
-   #   479:3  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+  # Example eslint output:
+  #
+  # /full/path/to/your/source.file.ts
+  #    16:1  error    There should be no empty line within import group  import/order
+  #   472:1  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
+  #   479:3  warning  Missing return type on function                    @typescript-eslint/explicit-function-return-type
 ]
 
 # go config
@@ -103,7 +127,7 @@ command = "gopls"
 # diagnosticsTrigger = "Save"
 usePlaceholders = true
 staticcheck = true
-vulncheck = "Imports" # or "All"
+vulncheck = "Imports"  # or "All"
 gofumpt = true
 
 [language-server.gopls.config.analyses]
@@ -115,64 +139,79 @@ unusedvariable = true
 [language-server.gopls.config.hints]
 compositeLiteralTypes = true
 
+# Specific Language Configs
 
-
-# Frontend Language Config
 [[language]]
 name = "angular"
 scope = "source.angular"
 injection-regex = "html"
-file-types = ["component.html", "html"] # Angular 21+ updated the naming format
+file-types = [
+  "component.html",
+  "html"
+]  # Angular 21+ updated the naming format
 block-comment-tokens = { start = "<!--", end = "-->" }
-language-servers = [{name = "efm-eslint", only-features = [ "diagnostics", "format" ]}, "angular"]
+language-servers = [
+  { name = "efm-eslint", only-features = ["diagnostics", "format"] },
+  "angular"
+]
 roots = ["project.json"]
-formatter = { command = 'prettier', args = ["--parser", "html"] }
+formatter = { command = "prettier", args = ["--parser", "html"] }
 auto-format = true
+
 [language.auto-pairs]
-'(' = ')'
-'{' = '}'
+'(' = ")"
+'{' = "}"
 '"' = '"'
 "'" = "'"
-
-[[grammar]]
-name = "angular"
-source = { git = "https://github.com/dlvandenberg/tree-sitter-angular", rev = "f0d0685701b70883fa2dfe94ee7dc27965cab841" }
 
 [[language]]
 name = "typescript"
 auto-format = true
 language-servers = [
-   "angular",
-   { name = "tsgo", except-features = ["format", "completion", "code-action", "goto-reference"] }, # Angular handles file references
-   { name = "typescript-language-server", only-features = ["completion", "code-action", "workspace-command"] },
-   { name = "efm-eslint", only-features = [ "diagnostics", "format"]}
+  "angular",
+  { name = "tsgo", except-features = [
+    "format",
+    "completion",
+    "code-action",
+    "goto-reference"
+  ] },  # Angular handles file references
+  { name = "typescript-language-server", only-features = [
+    "completion",
+    "code-action",
+    "workspace-command"
+  ] },
+  { name = "efm-eslint", only-features = ["diagnostics", "format"] }
 ]
-formatter = { command = 'prettier', args = ["--parser", "typescript"] }
-roots = ["package.json"]
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
+roots = ["project.json"]
 
 [[language]]
 name = "javascript"
 auto-format = true
-formatter = { command = 'prettier', args = ["--parser", "babel"] }
-roots = ["package.json"]
+formatter = { command = "prettier", args = ["--parser", "babel"] }
+roots = ["project.json"]
 
 [[language]]
 name = "scss"
 auto-format = true
-formatter = { command = 'prettier', args = ["--parser", "scss"] }
-roots = ["package.json"]
+formatter = { command = "prettier", args = ["--parser", "scss"] }
+roots = ["project.json"]
 
 [[language]]
 name = "json"
 auto-format = true
-formatter = { command = 'prettier', args = ["--parser", "json"] }
-roots = ["package.json"]
+formatter = { command = "prettier", args = ["--parser", "json"] }
+roots = ["project.json"]
 
-# Backend Language Config
 [[language]]
 name = "go"
 indent = { tab-width = 2, unit = " " }
 auto-format = true
-language-servers = ["gopls"]
+# language-servers = ["gopls"]
 formatter = { command = "gofumpt" }
 
+# Custom Grammars
+
+[[grammar]]
+name = "angular"
+source = { git = "https://github.com/dlvandenberg/tree-sitter-angular", rev = "f0d0685701b70883fa2dfe94ee7dc27965cab841" }
